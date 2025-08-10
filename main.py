@@ -1,6 +1,7 @@
 import pygame
 from constants import (SCREEN_WIDTH, SCREEN_HEIGHT)
 from player import Player
+from astroid import Astroid
 
 
 def main():
@@ -12,6 +13,13 @@ def main():
     timer = pygame.time.Clock()
     dt = 0
 
+    updateable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    astroids = pygame.sprite.Group()
+
+    Player.containers = (updateable, drawable)
+    Astroid.containers = (astroids, updateable, drawable)
+
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
     while True:
@@ -19,10 +27,12 @@ def main():
             if event.type == pygame.QUIT:
                 return
 
-        player.update(dt)
+        updateable.update(dt)
 
         screen.fill("black")
-        player.draw(screen)
+
+        for object in drawable:
+            object.draw(screen)
 
         pygame.display.flip()
 
